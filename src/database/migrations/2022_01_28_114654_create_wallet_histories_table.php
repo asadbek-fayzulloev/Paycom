@@ -15,6 +15,12 @@ class CreateWalletHistoriesTable extends Migration
     {
         Schema::create('wallet_histories', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('wallet_id');
+            $table->integer('amount');
+            $table->string('payment_type');
+            $table->string('order_type');
+            $table->unsignedBigInteger('order_id');
+            $table->string('description');
             $table->timestamps();
         });
     }
