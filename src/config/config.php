@@ -1,0 +1,6 @@
+<?php
+return [
+    'merchant' => env('PAYCOM_MERCHANT', ''),
+    'key' => env('PAYCOM_KEY', ''),
+    'key_test' => env('PAYCOM_KEY_TEST', ''),
+];
