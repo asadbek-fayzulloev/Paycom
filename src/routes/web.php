@@ -1,6 +1,7 @@
 <?php
 
 
+use App\Http\Controllers\admin\LoginController;
 use Asadbek\Paycom\Http\Controller\PaycomController;
 
 Route::group([
