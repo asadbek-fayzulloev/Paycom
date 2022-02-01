@@ -1,0 +1,14 @@
+{
+    "name": "asadbek/paycom",
+    "authors": [
+        {
+            "name": "Asadbekinha",
+            "email": "fayzulloevasadbek@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Asadbek\\Paycom\\": "src/"
+        }
+    }
+}
