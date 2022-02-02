@@ -9,7 +9,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Asadbek\\Paycom\\Providers\\PaycomServiceProvider"
+                "Asadbek\\Paycom\\Providers\\PaycomPaymentProvider"
             ]
         }
     },
