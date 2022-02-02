@@ -6,6 +6,13 @@
             "email": "fayzulloevasadbek@gmail.com"
         }
     ],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Asadbek\\Paycom\\Providers\\PaycomServiceProviders"
+            ]
+        }
+    },
     "autoload": {
         "psr-4": {
             "Asadbek\\Paycom\\": "src/"
