@@ -21,11 +21,11 @@ class CreatePaycomTransactionsTable extends Migration
             $table->dateTime('create_time');
             $table->dateTime('perform_time');
             $table->dateTime('cancel_time');
-            $table->unsignedBigInteger('amount');
-            $table->integer('state',11);
-            $table->integer('reason',);
+            $table->bigInteger('amount')->unsigned();
+            $table->integer('state');
+            $table->integer('reason');
             $table->string('receivers',500);
-            $table->unsignedBigInteger('booking_id');
+            $table->bigInteger('booking_id')->unsigned();
             $table->timestamps();
         });
     }
