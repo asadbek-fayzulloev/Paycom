@@ -1,7 +1,6 @@
 <?php
 
 
-use App\Http\Controllers\admin\LoginController;
 use Asadbek\Paycom\Http\Controller\PaycomController;
 
 Route::group([
@@ -10,6 +9,6 @@ Route::group([
     'as' => 'paycom.',
     'namespace' => 'Asadbek\Paycom\Http\Controllers'
 ], function () {
-    
+
     Route::post('paycom', [PaycomController::class,'index'])->name('paycom');
 });

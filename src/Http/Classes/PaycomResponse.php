@@ -8,8 +8,6 @@
 
 namespace Asadbek\Paycom\Http\Classes;
 
-
-
 use Asadbek\Paycom\Exceptions\PaycomException;
 class PaycomResponse
 {

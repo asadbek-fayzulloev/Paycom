@@ -3,7 +3,7 @@
 namespace Asadbek\Paycom\Models;
 
 
-use App\Services\Paycom\helpers\FormatHelper;
+use Asadbek\Paycom\Helpers\FormatHelper;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
