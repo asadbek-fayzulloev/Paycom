@@ -18,10 +18,10 @@ class CreateWalletHistoriesTable extends Migration
             $table->unsignedBigInteger('wallet_id');
             $table->foreign('wallet_id')->references('id')->on('wallet');
             $table->integer('amount');
-            $table->string('payment_type');
-            $table->string('order_type');
-            $table->unsignedBigInteger('order_id');
-            $table->string('description');
+            $table->string('type');
+            $table->string('order_type')->nullable();
+            $table->unsignedBigInteger('order_id')->nullable();
+            $table->string('description')->nullable();
             $table->timestamps();
         });
     }

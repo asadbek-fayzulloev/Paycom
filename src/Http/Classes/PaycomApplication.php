@@ -13,6 +13,8 @@ use Asadbek\Paycom\Exceptions\PaycomException;
 use Asadbek\Paycom\Models\PaycomTransaction;
 use Asadbek\Paycom\Helpers\FormatHelper;
 use Asadbek\Paycom\Models\Wallet;
+use Asadbek\Paycom\Models\WalletHistory;
+use Illuminate\Support\Facades\DB;
 
 class PaycomApplication
 {
@@ -164,17 +166,37 @@ class PaycomApplication
                     'time'
                 );
             }
-
-            $create_time = FormatHelper::timestamp(true);
-            $transaction = new PaycomTransaction();
-            $transaction->paycom_transaction_id = $this->request->params['id'];
-            $transaction->paycom_time = $this->request->params['time'];
-            $transaction->paycom_time_datetime = FormatHelper::timestamp2datetime($this->request->params['time']);
-            $transaction->create_time = FormatHelper::timestamp2datetime($create_time);
-            $transaction->state = PaycomTransaction::STATE_CREATED;
-            $transaction->amount = $this->request->amount;
-            $transaction->wallet_id = $this->request->account('wallet_id');
-            $transaction->save();
+            DB::beginTransaction();
+            try {
+                $create_time = FormatHelper::timestamp(true);
+                $transaction = new PaycomTransaction();
+                $transaction->paycom_transaction_id = $this->request->params['id'];
+                $transaction->paycom_time = $this->request->params['time'];
+                $transaction->paycom_time_datetime = FormatHelper::timestamp2datetime($this->request->params['time']);
+                $transaction->create_time = FormatHelper::timestamp2datetime($create_time);
+                $transaction->state = PaycomTransaction::STATE_CREATED;
+                $transaction->amount = $this->request->amount;
+                $transaction->wallet_id = $this->request->account('wallet_id');
+                $transaction->save();
+                $wallet_history = new WalletHistory();
+                $wallet_history->wallet_id = $this->request->account('wallet_id');
+                $wallet_history->amount = $this->request->amount;
+                $wallet_history->type = "INCOME";
+                $wallet_history->description = "wallet # ".$this->request->account('wallet_id')." was topped up";
+                $wallet_history->save();
+            } catch (\Exception $exception){
+                DB::rollBack();
+                $this->response->error(
+                    PaycomException::ERROR_INVALID_ACCOUNT,
+                    PaycomException::message(
+                        'Ошибка сервера!',
+                        'Serverda xatolik!',
+                        'Server error!'
+                    ),
+                    'error'
+                );
+            }
+            DB::commit();
 
             $this->response->send([
                 'create_time' => $create_time,
