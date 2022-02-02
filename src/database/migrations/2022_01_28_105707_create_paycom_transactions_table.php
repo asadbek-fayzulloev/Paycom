@@ -25,7 +25,7 @@ class CreatePaycomTransactionsTable extends Migration
             $table->integer('state',11);
             $table->integer('reason',);
             $table->string('receivers',500);
-            $table->unsignedBigInteger('booking_id');
+            $table->integer('booking_id', true);
 
             $table->timestamps();
         });
