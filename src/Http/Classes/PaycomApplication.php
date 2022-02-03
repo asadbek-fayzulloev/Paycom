@@ -12,8 +12,7 @@ namespace Asadbek\Paycom\Http\Classes;
 use Asadbek\Paycom\Exceptions\PaycomException;
 use Asadbek\Paycom\Models\PaycomTransaction;
 use Asadbek\Paycom\Helpers\FormatHelper;
-use Asadbek\Paycom\Models\Wallet;
-use Asadbek\Paycom\Models\WalletHistory;
+use Asadbek\Paycom\Models\Order;
 use Illuminate\Support\Facades\DB;
 
 class PaycomApplication
@@ -87,7 +86,7 @@ class PaycomApplication
      */
     private function CheckPerformTransaction()
     {
-        $this->validateWallet();
+        $this->validateOrder();
         $this->validateTransaction();
         $this->response->send(['allow' => true]);
     }
@@ -120,7 +119,7 @@ class PaycomApplication
      */
     private function CreateTransaction()
     {
-        $this->validateWallet();
+        $this->validateOrder();
         $transaction = $this->findTransaction();
         if ($transaction) {
             if (($transaction->state == PaycomTransaction::STATE_CREATED
@@ -176,14 +175,8 @@ class PaycomApplication
                 $transaction->create_time = FormatHelper::timestamp2datetime($create_time);
                 $transaction->state = PaycomTransaction::STATE_CREATED;
                 $transaction->amount = $this->request->amount;
-                $transaction->wallet_id = $this->request->account('wallet_id');
+                $transaction->order_id = $this->request->account('order_id');
                 $transaction->save();
-                $wallet_history = new WalletHistory();
-                $wallet_history->wallet_id = $this->request->account('wallet_id');
-                $wallet_history->amount = $this->request->amount;
-                $wallet_history->type = "INCOME";
-                $wallet_history->description = "wallet # ".$this->request->account('wallet_id')." was topped up";
-                $wallet_history->save();
             } catch (\Exception $exception){
                 DB::rollBack();
                 $this->response->error(
@@ -229,10 +222,6 @@ class PaycomApplication
                     );
                 } else {
                     //todo IMPORTTANT
-//                    Booking::where('id', $transaction->wallet_id)->update(['paid' => Wallet::PAID_UZCARD]);
-                    $wallet = Wallet::where('id', $transaction->walllet_id)->first();
-                    $wallet->amount = $wallet->amount + intval($transaction->amount);
-                    $wallet->save();
                     // todo: Mark transaction as completed
                     $perform_time = FormatHelper::timestamp(true);
                     $transaction->state = PaycomTransaction::STATE_COMPLETED;
@@ -292,7 +281,7 @@ class PaycomApplication
             case PaycomTransaction::STATE_CREATED:
                 $transaction->cancel(1 * $this->request->params['reason']);
 
-                Wallet::where('id', $transaction->wallet_id)->update(['paid' => null]);
+                Order::where('id', $transaction->order_id)->update(['paid' => null]);
 
                 $this->response->send([
                     'transaction' => $transaction->paycom_transaction_id,
@@ -302,13 +291,13 @@ class PaycomApplication
                 break;
 
             case PaycomTransaction::STATE_COMPLETED:
-                $wallet = Wallet::find($transaction->wallet_id);
-                if ($wallet->canCancelPay()) {
+                $order = Order::find($transaction->order_id);
+                if ($order->canCancelPay()) {
                     // cancel and change state to cancelled
                     $transaction->cancel(1 * $this->request->params['reason']);
                     // after $transaction->cancel(), cancel_time and state properties populated with data
 
-                    Wallet::where('id', $transaction->wallet_id)->update(['paid' => null]);
+                    Order::where('id', $transaction->order_id)->update(['paid' => null]);
 
                     // send response
                     $this->response->send([
@@ -332,7 +321,7 @@ class PaycomApplication
      * @return bool
      * @throws PaycomException
      */
-    private function validateWallet()
+    private function validateOrder()
     {
         if (!isset($this->request->params['amount']) || !is_numeric($this->request->params['amount'])) {
             throw new PaycomException(
@@ -351,13 +340,13 @@ class PaycomApplication
 //                    'Incorrect order code.'
 //                ),
 //                PaycomException::ERROR_INVALID_ACCOUNT,
-//                'wallet_id'
+//                'order_id'
 //            );
 //        }
 
-        $wallet = Wallet::find($this->request->params['account']['wallet_id']);
+        $order = Order::find($this->request->params['account']['order_id']);
 
-        if (!$wallet || !$wallet->id) {
+        if (!$order || !$order->id) {
             throw new PaycomException(
                 $this->request->id,
                 PaycomException::message(
@@ -366,11 +355,11 @@ class PaycomApplication
                     'Incorrect order code.'
                 ),
                 PaycomException::ERROR_INVALID_ACCOUNT,
-                'wallet_id'
+                'order_id'
             );
         }
 
-        if ((100 * ($wallet->amount)) != (1 * $this->request->params['amount'])) {
+        if ((100 * ($order->amount)) != (1 * $this->request->params['amount'])) {
             throw new PaycomException(
                 $this->request->id,
                 'Incorrect amount.',
@@ -378,7 +367,7 @@ class PaycomApplication
             );
         }
 
-//        if ($wallet->paid || $booking->status != Booking::STATUS_ACCEPTED || !$booking->canPay()) {
+//        if ($order->paid || $booking->status != Booking::STATUS_ACCEPTED || !$booking->canPay()) {
 //            throw new PaycomException(
 //                $this->request->id,
 //                'Order state is invalid.',
@@ -463,8 +452,8 @@ class PaycomApplication
     private function findTransaction()
     {
 
-        if (isset($this->request->params['account'], $this->request->params['account']['wallet_id'])) {
-            $transaction = PaycomTransaction::where('wallet_id', $this->request->params['account']['wallet_id'])
+        if (isset($this->request->params['account'], $this->request->params['account']['order_id'])) {
+            $transaction = PaycomTransaction::where('order_id', $this->request->params['account']['order_id'])
                 ->whereIn('state', [1, 2])->first();
         } else if (isset($this->request->params['id'])) {
             $transaction = PaycomTransaction::where('paycom_transaction_id', $this->request->params['id'])->first();
@@ -493,7 +482,7 @@ class PaycomApplication
                 'time' => 1 * $row['paycom_time'], // paycom transaction timestamp as is
                 'amount' => 1 * $row['amount'],
                 'account' => [
-                    'wallet_id' => 1 * $row['wallet_id'], // account parameters to identify client/order/service
+                    'order_id' => 1 * $row['order_id'], // account parameters to identify client/order/service
                     // ... additional parameters may be listed here, which are belongs to the account
                 ],
                 'create_time' => FormatHelper::datetime2timestamp($row['create_time']),
