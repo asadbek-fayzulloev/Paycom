@@ -10,5 +10,5 @@ Route::group([
     'namespace' => 'Asadbek\Paycom\Http\Controllers'
 ], function () {
 
-    Route::post('pay', [PaycomController::class,'index'])->name('paycom');
+    Route::post('pay', [PaycomController::class,'index'])->name('pay');
 });
