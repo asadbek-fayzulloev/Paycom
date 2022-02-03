@@ -193,7 +193,7 @@ class PaycomApplication
                         'Serverda xatolik!',
                         'Server error!'
                     ),
-                    'error'
+                    'error'.$exception->getMessage()
                 );
             }
             DB::commit();
