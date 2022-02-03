@@ -187,7 +187,7 @@ class PaycomApplication
             } catch (\Exception $exception){
                 DB::rollBack();
                 $this->response->error(
-                    PaycomException::ERROR_INVALID_ACCOUNT,
+                    PaycomException::ERROR_SERVER,
                     PaycomException::message(
                         'Ошибка сервера!',
                         'Serverda xatolik!',

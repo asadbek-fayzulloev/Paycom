@@ -22,6 +22,7 @@ class PaycomException extends \Exception
     const ERROR_INVALID_ACCOUNT         = -31050;
     const ERROR_COULD_NOT_CANCEL        = -31007;
     const ERROR_COULD_NOT_PERFORM       = -31008;
+    const ERROR_SERVER       = -33111;
 
     public $request_id;
     public $error;
