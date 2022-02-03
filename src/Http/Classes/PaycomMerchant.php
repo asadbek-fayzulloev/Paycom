@@ -27,7 +27,7 @@ class PaycomMerchant
      */
     public function Authorize($request_id)
     {
-        $key = $this->config["is_true"]=="true" ? $this->config['key_test'] :$this->config['key'];
+        $key = $this->config["is_test"]=="true" ? $this->config['key_test'] :$this->config['key'];
         $headers = getallheaders();
         if (!$headers || !isset($headers['Authorization']) ||
             !preg_match('/^\s*Basic\s+(\S+)\s*$/i', $headers['Authorization'], $matches) ||

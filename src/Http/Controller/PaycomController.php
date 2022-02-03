@@ -19,7 +19,7 @@ class PaycomController extends Controller
             'login' => config('paycom.login'),
             'key' => config('paycom.key'),
             'key_test' => config('paycom.key_test'),
-            'is_true' => config('paycom.is_true'),
+            'is_test' => config('paycom.is_test'),
 
         ]);
         $application->run();
