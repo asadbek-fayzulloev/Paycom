@@ -18,6 +18,9 @@ class PaycomController extends Controller
             'merchant_id' => config('paycom.merchant'),
             'login' => config('paycom.login'),
             'key' => config('paycom.key'),
+            'key_test' => config('paycom.key_test'),
+            'is_true' => config('paycom.is_true'),
+
         ]);
         $application->run();
     }
