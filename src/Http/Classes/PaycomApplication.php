@@ -342,18 +342,18 @@ class PaycomApplication
             );
         }
 
-        if (!isset($this->request->params['account']['user_id']) || !$this->request->params['account']['user_id']) {
-            throw new PaycomException(
-                $this->request->id,
-                PaycomException::message(
-                    'Неверный код заказа.',
-                    'Harid kodida xatolik.',
-                    'Incorrect order code.'
-                ),
-                PaycomException::ERROR_INVALID_ACCOUNT,
-                'wallet_id'
-            );
-        }
+//        if (!isset($this->request->params['account']['user_id']) || !$this->request->params['account']['user_id']) {
+//            throw new PaycomException(
+//                $this->request->id,
+//                PaycomException::message(
+//                    'Неверный код заказа.',
+//                    'Harid kodida xatolik.',
+//                    'Incorrect order code.'
+//                ),
+//                PaycomException::ERROR_INVALID_ACCOUNT,
+//                'wallet_id'
+//            );
+//        }
 
         $wallet = Wallet::find($this->request->params['account']['wallet_id']);
 
