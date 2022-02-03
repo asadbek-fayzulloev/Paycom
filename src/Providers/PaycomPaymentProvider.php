@@ -13,7 +13,7 @@ class PaycomPaymentProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__.'/../../config/config.php', 'paycom');
+        $this->mergeConfigFrom(__DIR__.'/../config/config.php', 'paycom');
         $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
 //        $this->loadViewsFrom(__DIR__.'/views', 'todolist');
@@ -33,7 +33,7 @@ class PaycomPaymentProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
 
             $this->publishes([
-                __DIR__.'/config/config.php' => config_path('paycom.php'),
+                __DIR__.'/../config/config.php' => config_path('paycom.php'),
             ], 'paycom');
 
         }
