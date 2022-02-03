@@ -27,11 +27,11 @@ class PaycomMerchant
      */
     public function Authorize($request_id)
     {
+        $key = $this->config["is_true"]=="true" ? $this->config['key_test'] :$this->config['key'];
         $headers = getallheaders();
-//        echo json_encode($this->config['key']);
         if (!$headers || !isset($headers['Authorization']) ||
             !preg_match('/^\s*Basic\s+(\S+)\s*$/i', $headers['Authorization'], $matches) ||
-            base64_decode($matches[1]) != $this->config['login'] . ":" . $this->config['key']
+            base64_decode($matches[1]) != $this->config['login'] . ":" . $key
         ) {
             throw new PaycomException(
                 $request_id,
