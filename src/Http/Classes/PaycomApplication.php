@@ -332,7 +332,7 @@ class PaycomApplication
         }
 
         $order = Order::where('id', $this->request->params['account']['order_id'])->first();
-        
+
         if (!$order || !$order->id) {
             throw new PaycomException(
                 $this->request->id,
@@ -354,13 +354,13 @@ class PaycomApplication
             );
         }
 
-//        if ($order->paid || $booking->status != Booking::STATUS_ACCEPTED || !$booking->canPay()) {
-//            throw new PaycomException(
-//                $this->request->id,
-//                'Order state is invalid.',
-//                PaycomException::ERROR_COULD_NOT_PERFORM
-//            );
-//        }
+        if ($order->paid || $order->status != Order::STATUS_ACCEPTED || !$order->canPay()) {
+            throw new PaycomException(
+                $this->request->id,
+                'Order state is invalid.',
+                PaycomException::ERROR_COULD_NOT_PERFORM
+            );
+        }
 
         return true;
     }
