@@ -344,7 +344,7 @@ class PaycomApplication
 //            );
 //        }
 
-        $order = Order::find($this->request->params['account']['order_id']);
+        $order = Order::where('id', $this->request->params['account']['order_id']);
 
         if (!$order || !$order->id) {
             throw new PaycomException(
