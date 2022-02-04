@@ -13,6 +13,7 @@ use Asadbek\Paycom\Exceptions\PaycomException;
 use Asadbek\Paycom\Models\PaycomTransaction;
 use Asadbek\Paycom\Helpers\FormatHelper;
 use Asadbek\Paycom\Models\Order;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 
 class PaycomApplication
@@ -332,10 +333,7 @@ class PaycomApplication
         }
 
         $order = Order::where('id', $this->request->params['account']['order_id'])->first();
-        return $order->id;
-        return $order;
-        return "efd";
-        if (!$order || !$order->id) {
+        if (!$order || !Arr::get($order, 'id')) {
             throw new PaycomException(
                 $this->request->id,
                 PaycomException::message(
