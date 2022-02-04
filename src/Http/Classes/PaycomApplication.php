@@ -331,21 +331,8 @@ class PaycomApplication
             );
         }
 
-//        if (!isset($this->request->params['account']['user_id']) || !$this->request->params['account']['user_id']) {
-//            throw new PaycomException(
-//                $this->request->id,
-//                PaycomException::message(
-//                    'Неверный код заказа.',
-//                    'Harid kodida xatolik.',
-//                    'Incorrect order code.'
-//                ),
-//                PaycomException::ERROR_INVALID_ACCOUNT,
-//                'order_id'
-//            );
-//        }
-
         $order = Order::where('id', $this->request->params['account']['order_id'])->first();
-
+        return response()->json($order);
         if (!$order || !$order->id) {
             throw new PaycomException(
                 $this->request->id,
