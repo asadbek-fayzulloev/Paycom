@@ -332,7 +332,7 @@ class PaycomApplication
         }
 
         $order = Order::where('id', $this->request->params['account']['order_id'])->first();
-
+        return $order;
         if (!$order || !$order->id) {
             throw new PaycomException(
                 $this->request->id,
