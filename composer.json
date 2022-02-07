@@ -6,6 +6,7 @@
             "email": "fayzulloevasadbek@gmail.com"
         }
     ],
+    "license": "MIT",
     "extra": {
         "laravel": {
             "providers": [
