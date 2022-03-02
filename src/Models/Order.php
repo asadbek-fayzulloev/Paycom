@@ -22,7 +22,12 @@ class Order extends Model
 
     public $request_id;
     public $params;
+    public function __construct(array $attributes = [])
+    {
+        parent::__construct($attributes);
+        $this->table = config('paycom.table.orders');
 
+    }
 
     public static function statuses()
     {
