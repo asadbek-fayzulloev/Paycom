@@ -23,7 +23,12 @@ class PaycomTransaction extends Model
     const REASON_CANCELLED_BY_TIMEOUT        = 4;
     const REASON_FUND_RETURNED               = 5;
     const REASON_UNKNOWN                     = 10;
+    public function __construct(array $attributes = [])
+    {
+        parent::__construct($attributes);
+        $this->table = config('paycom.table.transactions');
 
+    }
     protected $guarded = ['id'];
     public $timestamps = false;
     /**
